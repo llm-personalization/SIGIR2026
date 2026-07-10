@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LLM Personalization: Foundations, Breakthroughs, and Frontiers</title>
+  <meta name="description"
+    content="SIGIR 2026 tutorial on LLM personalization, covering foundations, breakthroughs, and frontiers." />
+  <style>
+    :root {
+      --ink: #16202f;
+      --muted: #5b6677;
+      --line: #d8ded9;
+      --paper: #fbfaf6;
+      --soft: #f1efe7;
+      --teal: #2e7d78;
+      --teal-dark: #174f55;
+      --amber: #c58b2d;
+      --coral: #b95747;
+      --blue: #315a91;
+      --white: #ffffff;
+      --shadow: 0 18px 42px rgba(19, 33, 47, 0.14);
+      font-family:
+        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--teal-dark);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    a:hover {
+      color: var(--coral);
+    }
+
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(19, 34, 48, 0.92);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: min(1120px, calc(100% - 40px));
+      min-height: 64px;
+      margin: 0 auto;
+      gap: 24px;
+    }
+
+    .brand {
+      color: var(--white);
+      font-size: 15px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-links a {
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 14px;
+      font-weight: 650;
+      text-decoration: none;
+    }
+
+    .nav-links a:hover {
+      color: var(--white);
+    }
+
+    .hero {
+      position: relative;
+      min-height: 620px;
+      display: grid;
+      align-items: end;
+      background:
+        linear-gradient(90deg, rgba(16, 29, 43, 0.92), rgba(16, 29, 43, 0.58) 52%, rgba(16, 29, 43, 0.18)),
+        url("assets/hero.png") center / cover no-repeat;
+      color: var(--white);
+    }
+
+    .hero-inner {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 92px 0 86px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 5px 11px;
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      border-radius: 999px;
+      color: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    h1 {
+      max-width: 920px;
+      margin: 22px 0 20px;
+      font-size: clamp(42px, 8vw, 78px);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 760px;
+      margin: 0;
+      color: rgba(255, 255, 255, 0.88);
+      font-size: 20px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    main {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    section {
+      padding: 72px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-head {
+      display: block;
+      margin-bottom: 28px;
+    }
+
+    .kicker {
+      margin: 0 0 8px;
+      color: var(--coral);
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .summary-copy {
+      font-size: 17px;
+    }
+
+    .summary-copy p:first-child {
+      margin-top: 0;
+    }
+
+    .dimension-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .dimension-list li {
+      display: grid;
+      grid-template-columns: 14px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 0 8px 22px rgba(19, 33, 47, 0.05);
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      margin-top: 8px;
+      border-radius: 999px;
+      background: var(--amber);
+    }
+
+    .organizer-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+      .organizer {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        min-height: 330px;
+        padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 0 10px 28px rgba(19, 33, 47, 0.06);
+    }
+
+    .avatar {
+      display: grid;
+      place-items: center;
+        width: 132px;
+        height: 132px;
+        margin-bottom: 20px;
+      border-radius: 50%;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--teal), var(--blue));
+      font-weight: 850;
+    }
+
+    .avatar-photo {
+      display: block;
+      object-fit: cover;
+      border: 2px solid #ffffff;
+      box-shadow: 0 6px 18px rgba(19, 33, 47, 0.16);
+    }
+
+    .avatar-focus-right {
+      object-position: right center;
+    }
+
+      .organizer h3 {
+        margin: 0;
+        text-align: center;
+        font-size: 19px;
+        line-height: 1.2;
+      }
+
+      .role {
+        margin: 7px 0 10px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.45;
+        text-align: center;
+      }
+
+      .email {
+        display: block;
+        overflow-wrap: anywhere;
+        text-align: center;
+        font-size: 13px;
+      }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      margin-top: 12px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: #f4e7d5;
+      color: #7d4b13;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .time-layout {
+      display: block;
+    }
+
+    .time-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 22px;
+      padding: 20px 22px;
+      border-radius: 8px;
+      background: var(--teal-dark);
+      color: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .time-banner p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    .time-banner strong {
+      display: block;
+      color: var(--white);
+      font-size: 22px;
+      line-height: 1.2;
+    }
+
+    .schedule {
+      display: grid;
+      gap: 12px;
+    }
+
+    .schedule-item {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 18px;
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .duration {
+      color: var(--coral);
+      font-size: 15px;
+      font-weight: 850;
+    }
+
+    .schedule-item h3 {
+      margin: 0 0 4px;
+      font-size: 18px;
+    }
+
+    .schedule-item p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    footer {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 34px 0 48px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .nav-inner {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 14px 0;
+        gap: 10px;
+      }
+
+      .nav-links {
+        justify-content: flex-start;
+      }
+
+      .hero {
+        min-height: 560px;
+      }
+
+      .organizer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+
+      .nav-inner,
+      .hero-inner,
+      main,
+      footer {
+        width: min(100% - 28px, 1120px);
+      }
+
+      .hero-inner {
+        padding: 50px 0 34px;
+      }
+
+      h1 {
+        font-size: 37px;
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      .meta-chip {
+        min-height: 34px;
+        font-size: 13px;
+      }
+
+      section {
+        padding: 54px 0;
+      }
+
+      .organizer-grid,
+      .schedule-item {
+        grid-template-columns: 1fr;
+      }
+
+      .time-banner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="site-nav" aria-label="Primary navigation">
+    <div class="nav-inner">
+      <div class="brand">LLM Personalization Tutorial</div>
+      <div class="nav-links">
+        <a href="#summary">Summary</a>
+        <a href="#organizers">Organizers</a>
+        <a href="#time">Tutorial Time</a>
+        <a href="https://sigir2026.org/en-AU">SIGIR 2026</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <span class="eyebrow">SIGIR 2026 Tutorial</span>
+      <h1>LLM Personalization: Foundations, Breakthroughs, and Frontiers</h1>
+      <div class="hero-meta" aria-label="Conference information">
+        <span class="meta-chip">49th International ACM SIGIR Conference</span>
+        <span class="meta-chip">20 July 2026</span>
+        <span class="meta-chip">Melbourne | Naarm, Australia</span>
+        <span class="meta-chip">On-site half-day tutorial</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="summary" aria-labelledby="summary-title">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Summary</p>
+          <h2 id="summary-title">From general intelligence to personalized intelligence</h2>
+        </div>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-copy">
+          <p>
+            Large Language Models are increasingly used in digital assistants,
+            education, healthcare, recommendation, and other long-term
+            interactive settings. In these scenarios, a useful model must move
+            beyond one-size-fits-all responses and adapt to individual user
+            preferences, histories, contexts, and evolving goals.
+          </p>
+          <p>
+            The tutorial introduces LLM personalization as a core paradigm for
+            next-generation AI systems. It explains how personalized LLMs can
+            perceive user-specific context, maintain continuity across
+            interactions, align behavior with individual preferences, and
+            reason under changing user states.
+          </p>
+          <p>
+            The tutorial also highlights open challenges including lifelong
+            learning, preference drift, privacy-preserving adaptation,
+            trustworthy personalization, scalable deployment, and evaluation
+            under dynamic user distributions.
+          </p>
+        </div>
+
+        <ul class="dimension-list" aria-label="Tutorial dimensions">
+          <li><span class="dot"></span><span><strong>User Memory.</strong> Persistent and evolving user representations
+              for long-term personalization.</span></li>
+          <li><span class="dot"></span><span><strong>Personalization Architecture.</strong> Retrieval, adapters,
+              plug-ins, and user-parameterized model designs.</span></li>
+          <li><span class="dot"></span><span><strong>Alignment and Post-training.</strong> User-specific preference
+              learning, fine-tuning, and reward modeling.</span></li>
+          <li><span class="dot"></span><span><strong>Inference-time Adaptation.</strong> Personalized decoding,
+              steering, and memory-augmented reasoning.</span></li>
+          <li><span class="dot"></span><span><strong>Deployment.</strong> Scalable, private, fair, and trustworthy
+              personalized systems.</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="organizers" aria-labelledby="organizers-title">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Tutorial Organizers</p>
+          <h2 id="organizers-title">Presenters and organizers</h2>
+        </div>
+      </div>
+
+      <div class="organizer-grid">
+        <article class="organizer">
+          <img class="avatar avatar-photo" src="assets/xiaoyan-zhao.jpg" alt="Xiaoyan Zhao" />
+          <h3>Xiaoyan Zhao</h3>
+          <p class="role">National University of Singapore</p>
+          <a class="email" href="mailto:xzhao@se.cuhk.edu.hk">xzhao@se.cuhk.edu.hk</a>
+          <a class="email" href="https://scholar.google.com/citations?user=rtLHw6QAAAAJ">Google Scholar</a>
+        </article>
+
+        <article class="organizer">
+          <img class="avatar avatar-photo" src="assets/xinyu-lin.jpg" alt="Xinyu Lin" />
+          <h3>Xinyu Lin</h3>
+          <p class="role">National University of Singapore</p>
+          <a class="email" href="mailto:xylin1028@gmail.com">xylin1028@gmail.com</a>
+          <a class="email" href="https://scholar.google.com/citations?user=0O_bs3UAAAAJ&amp;hl=en">Google Scholar</a>
+        </article>
+
+        <article class="organizer">
+          <img class="avatar avatar-photo avatar-focus-right" src="assets/chengbing-wang.jpg" alt="Chengbing Wang" />
+          <h3>Chengbing Wang</h3>
+          <p class="role">University of Science and Technology of China</p>
+          <a class="email" href="mailto:wcb0219@gmail.com">wcb0219@gmail.com</a>
+        </article>
+
+        <article class="organizer">
+          <img class="avatar avatar-photo" src="assets/zeyu-zhang.jpg" alt="Zeyu Zhang" />
+          <h3>Zeyu Zhang</h3>
+          <p class="role">Renmin University of China</p>
+          <a class="email" href="mailto:zeyuzhang@ruc.edu.cn">zeyuzhang@ruc.edu.cn</a>
+          <a class="email" href="https://scholar.google.com/citations?user=AuLB6mUAAAAJ">Google Scholar</a>
+        </article>
+
+        <article class="organizer">
+          <img class="avatar avatar-photo" src="assets/bohao-wang.jpg" alt="Bohao Wang" />
+          <h3>Bohao Wang</h3>
+          <p class="role">Zhejiang University</p>
+          <a class="email" href="mailto:bohao.wang@zju.edu.cn">bohao.wang@zju.edu.cn</a>
+          <a class="email" href="https://scholar.google.com/citations?user=0yreGNIAAAAJ">Google Scholar</a>
+        </article>
+
+        <article class="organizer">
+          <img class="avatar avatar-photo" src="assets/yang-zhang.jpg" alt="Yang Zhang" />
+          <h3>Yang Zhang</h3>
+          <p class="role">National University of Singapore</p>
+          <a class="email" href="mailto:zyang1580@gmail.com">zyang1580@gmail.com</a>
+          <a class="email" href="https://scholar.google.com/citations?user=M9NcazMAAAAJ">Google Scholar</a>
+        </article>
+
+        <article class="organizer">
+          <img class="avatar avatar-photo" src="assets/wenjie-wang.jpeg" alt="Wenjie Wang" />
+          <h3>Wenjie Wang</h3>
+          <p class="role">University of Science and Technology of China</p>
+          <a class="email" href="mailto:wenjiewang96@gmail.com">wenjiewang96@gmail.com</a>
+          <a class="email" href="https://scholar.google.com/citations?user=Ma5DtmoAAAAJ&amp;hl=en">Google Scholar</a>
+        </article>
+
+        <article class="organizer">
+          <img class="avatar avatar-photo" src="assets/fuli-feng.jpeg" alt="Fuli Feng" />
+          <h3>Fuli Feng</h3>
+          <p class="role">University of Science and Technology of China</p>
+          <a class="email" href="mailto:fulifeng93@gmail.com">fulifeng93@gmail.com</a>
+          <a class="email" href="https://scholar.google.com.sg/citations?user=QePM4u8AAAAJ&amp;hl=en">Google Scholar</a>
+        </article>
+      </div>
+    </section>
+
+    <section id="time" aria-labelledby="time-title">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Tutorial Time</p>
+          <h2 id="time-title">Monday 20 July 2026, 09:00-12:30</h2>
+        </div>
+      </div>
+
+      <div class="time-layout">
+        <div class="time-banner">
+          <div>
+            <strong>09:00-12:30</strong>
+            <p>Monday 20 July 2026</p>
+          </div>
+          <p>LLM Personalization: Foundations, Breakthroughs, and Frontiers</p>
+        </div>
+
+        <div class="schedule">
+          <article class="schedule-item">
+            <div class="duration">15 mins</div>
+            <div>
+              <h3>Introduction to LLM Personalization</h3>
+              <p>Motivation, tutorial organization, personalized AGI paradigm, and scope.</p>
+            </div>
+          </article>
+
+          <article class="schedule-item">
+            <div class="duration">80 mins</div>
+            <div>
+              <h3>Technical Foundations of LLM Personalization</h3>
+              <p>User memory, model architecture, alignment and training, inference-time personalization, and deployment
+                considerations.</p>
+            </div>
+          </article>
+
+          <article class="schedule-item">
+            <div class="duration">5 mins</div>
+            <div>
+              <h3>Q&amp;A</h3>
+              <p>Questions on the foundations and technical stack.</p>
+            </div>
+          </article>
+
+          <article class="schedule-item">
+            <div class="duration">10 mins</div>
+            <div>
+              <h3>Break</h3>
+              <p>Short intermission between the technical foundation and research-frontier sessions.</p>
+            </div>
+          </article>
+
+          <article class="schedule-item">
+            <div class="duration">40 mins</div>
+            <div>
+              <h3>Open Problems and Research Challenges</h3>
+              <p>Heterogeneous user modeling, lifelong personalization, preference drift, evaluation, and benchmarking.
+              </p>
+            </div>
+          </article>
+
+          <article class="schedule-item">
+            <div class="duration">25 mins</div>
+            <div>
+              <h3>Conclusion and Future Directions</h3>
+              <p>Personalized digital partners, open-ended content generation, scaling laws, multi-agent systems, and
+                the science of LLM personalization.</p>
+            </div>
+          </article>
+
+          <article class="schedule-item">
+            <div class="duration">5 mins</div>
+            <div>
+              <h3>Final Q&amp;A</h3>
+              <p>Discussion and closing questions.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+</body>
+
+</html>
