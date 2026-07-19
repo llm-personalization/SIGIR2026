@@ -375,6 +375,38 @@
       color: var(--muted);
     }
 
+    .session-parts {
+      display: grid;
+      gap: 8px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .session-part {
+      display: grid;
+      grid-template-columns: 112px 1fr;
+      gap: 14px;
+      padding-top: 8px;
+      border-top: 1px solid var(--line);
+    }
+
+    .part-time {
+      color: var(--teal-dark);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .part-title {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .part-speaker {
+      color: var(--muted);
+      font-weight: 500;
+    }
+
     footer {
       width: min(1120px, calc(100% - 40px));
       margin: 0 auto;
@@ -441,6 +473,11 @@
       .organizer-grid,
       .schedule-item {
         grid-template-columns: 1fr;
+      }
+
+      .session-part {
+        grid-template-columns: 1fr;
+        gap: 2px;
       }
 
       .time-banner {
@@ -628,32 +665,32 @@
           <article class="schedule-item">
             <div class="duration">09:00&ndash;09:10</div>
             <div>
-              <h3>Introduction</h3>
-              <p>Zhang Yang &middot; 10 min</p>
+              <h3>1. Introduction</h3>
+              <p>Yang &middot; 10 min</p>
             </div>
           </article>
 
           <article class="schedule-item">
-            <div class="duration">09:10&ndash;09:35</div>
+            <div class="duration">09:10&ndash;10:15</div>
             <div>
-              <h3>T1: Memory</h3>
-              <p>Xiaoyan &middot; 25 min</p>
-            </div>
-          </article>
-
-          <article class="schedule-item">
-            <div class="duration">09:35&ndash;09:55</div>
-            <div>
-              <h3>T2: Post-training</h3>
-              <p>Xiaoyan &middot; 20 min</p>
-            </div>
-          </article>
-
-          <article class="schedule-item">
-            <div class="duration">09:55&ndash;10:15</div>
-            <div>
-              <h3>T3: Steering</h3>
-              <p>Xinyu &middot; 20 min</p>
+              <h3>2. Technique foundations of personalization</h3>
+              <p>Xiaoyan &amp; Xinyu &middot; 65 min</p>
+              <ul class="session-parts" aria-label="Technique foundations parts">
+                <li class="session-part">
+                  <span class="part-time">09:10&ndash;09:35</span>
+                  <span class="part-title">Part 1: Memory <span class="part-speaker">(Xiaoyan)</span></span>
+                </li>
+                <li class="session-part">
+                  <span class="part-time">09:35&ndash;09:55</span>
+                  <span class="part-title">Part 2: Alignment &ndash; post-training <span
+                      class="part-speaker">(Xiaoyan)</span></span>
+                </li>
+                <li class="session-part">
+                  <span class="part-time">09:55&ndash;10:15</span>
+                  <span class="part-title">Part 3: Alignment &ndash; Test-time personalization <span
+                      class="part-speaker">(Xinyu)</span></span>
+                </li>
+              </ul>
             </div>
           </article>
 
@@ -683,23 +720,23 @@
           <article class="schedule-item">
             <div class="duration">11:00&ndash;11:20</div>
             <div>
-              <h3>Evaluation &amp; Benchmarks</h3>
-              <p>Xinyu &middot; 20 min</p>
+              <h3>3. Benchmarks &amp; Evaluation</h3>
+              <p>Xinyu Lin &middot; 20 min</p>
             </div>
           </article>
 
           <article class="schedule-item">
             <div class="duration">11:20&ndash;11:50</div>
             <div>
-              <h3>New Directions</h3>
-              <p>Zhang Yang &middot; 30 min</p>
+              <h3>4. New directions beyond memory and alignment</h3>
+              <p>Yang &middot; 30 min</p>
             </div>
           </article>
 
           <article class="schedule-item">
             <div class="duration">11:50&ndash;12:15</div>
             <div>
-              <h3>Deployment &amp; Applications</h3>
+              <h3>5. Applications</h3>
               <p>Chongming &middot; 25 min</p>
             </div>
           </article>
@@ -707,7 +744,7 @@
           <article class="schedule-item">
             <div class="duration">12:15&ndash;12:20</div>
             <div>
-              <h3>Conclusion</h3>
+              <h3>6. Conclusion</h3>
               <p>Chongming &middot; 5 min</p>
             </div>
           </article>
